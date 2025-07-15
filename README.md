@@ -19,4 +19,4 @@ This project is an interactive web map for visualizing health facility locations
 - [OpenStreetMap](https://www.openstreetmap.org/)
 
 
-![Initial Zoom]("screenshots/initial_zoom.png")
+<img src="screenshots/initial_zoom.png" alt="Web Map Initial Zoom" width="600"/>
