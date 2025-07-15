@@ -27,7 +27,7 @@ osm.addTo(map);
 // L.marker([9.8447,12.6109]).addTo(map)
 //     .bindPopup('Adamawa State.<br> Hospitals')
 // .openPopup();
-
+// _____________________________________________________________________________________________________________________________________
 // ADDING GEOJSON DATA 
 // var geojsonLayer = omnivore.geojson("data/geojson/election.json", null,
 //     L.geoJSON(
@@ -58,90 +58,85 @@ osm.addTo(map);
 // geojsonLayer.on("ready", function() {
 //     map.fitBounds(geojsonLayer.getBounds());
 // })
-
+// _____________________________________________________________________________________________________________________________________
 
 
 /// ADDING CSV DATA
 // Marker Clustering because the markers could be too many and too close together
-const markers = L.markerClusterGroup();
-// add the marker clusters to the map
- map.addLayer(markers);
+//***************************************
+// const markers = L.markerClusterGroup();
+// // add the marker clusters to the map
+//  map.addLayer(markers);
+// ****************************************
 
-
-//  _________________________________________________________________________________________
-// icon for each category 
-/*
-'Dispensary', 'Primary Health Center', 'Specialist Hospital','Maternity Home', 'Medical Center', 'Educational Clinic',
-'Cottage Hospital', 'Private Non Profit', 'Federal Staff Clinic',
-'Comprehensive Health Center', 'Veterinary Clinic',
-'Military and Paramilitary Clinic', 'General Hospital',
-'Federal Medical Center'
-*/
-const dispensaryIcon = L.icon({
-    iconUrl: "data/icons/dispensary.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30]
-})
-const phcIcon = L.icon({
-    iconUrl: "data/icons/primary health centre.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30]
-})
-
-
-
-
+//  icon for each category _________________________________________________________________________________________ 
+const categoryIcons = {
+  "Primary Health Center": L.icon({ iconUrl: "data/icons/primary_health_centre.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Dispensary": L.icon({ iconUrl: "data/icons/dispensary.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Maternity Home": L.icon({ iconUrl: "data/icons/maternity_home.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Private Non Profit": L.icon({ iconUrl: "data/icons/private_non_profit.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Educational Clinic": L.icon({ iconUrl: "data/icons/educational_clinic.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Cottage Hospital": L.icon({ iconUrl: "data/icons/cottage_hospital.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "General Hospital": L.icon({ iconUrl: "data/icons/general_hospital.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Medical Center": L.icon({ iconUrl: "data/icons/medical_centre.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Military and Paramilitary Clinic": L.icon({ iconUrl: "data/icons/military_paramilitary_clinic.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Specialist Hospital": L.icon({ iconUrl: "data/icons/specialist_hospital.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Comprehensive Health Center": L.icon({ iconUrl: "data/icons/veterinary_clinic.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }), // bad svg
+  "Federal Staff Clinic": L.icon({ iconUrl: "data/icons/veterinary_clinic.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }), // bad svg
+  "Veterinary Clinic": L.icon({ iconUrl: "data/icons/veterinary_clinic.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] }),
+  "Federal Medical Center": L.icon({ iconUrl: "data/icons/federal_medical_centre.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] })
+};
 // ____________________________________________________________________________________________
 
-// Use the omnivore library to read the CSV file and convert it to GeoJSON
-var csvLayer = omnivore.csv("data/csv/adamawa_health_facilities.csv", null,
-    L.geoJSON(
-        null, {
-            // convert the markers(points) to layers
-            pointToLayer: function(feature, latlng) {
-                // categories of health facilities
-                const category = feature.properties.category;
+// Fallback default icon
+const defaultIcon = categoryIcons["Veterinary Clinic"];
 
-                let iconToUse;
-                if (category === "Primary Health Center") {
-                    iconToUse = phcIcon;
-                }
-                else if (){}
-                else if (){}
-                else if (){}
-                else if (){}
-                else if (){}
-                else if (){}
-                else if (){}
-                else if (){}
-                else if (){}
-                else if (){}
-                else if (){}
-                else if (){}
-                else {
-                    iconToUse = dispensaryIcon; // default icon for other categories
-                }
+// ✅ Create cluster groups globally once
+const clusterGroups = {};
 
-                const marker = L.marker(latlng, { icon: iconToUse });
-                markers.addLayer(marker);
-                return marker;
-                // markers.addLayer(L.marker(latlng, {icon: iconToUse}))
-                
-            },
+// Let each category (of health facilities in this case) have its own cluster group
+for (let category in categoryIcons) {
+    // the new dictionary "cluster groups" will have the catergory icons as keys
+    // and the "L.markerClusterGroup()" as values
+    clusterGroups[category] = L.markerClusterGroup();
+}
+clusterGroups["Other"] = L.markerClusterGroup();
 
-            // Popup Content for each marker
-            onEachFeature: function(feature, layer){
-                if (feature.properties) {
-                    const properties = feature.properties;
-                    let popupContent = `<div class="health-facility-popup">`;
-                    for (key in properties){
-                        if (properties.hasOwnProperty(key)) {
-                            popupContent += `<b>${key}:</b> ${properties[key]}<br>`;
-                        }
-                    }
-                    popupContent += `</div>`;
-                    layer.bindPopup(popupContent);
-                }
-            }
-        }
-    )
-);
+  // Add the cluster groups to the map once, so they can be used later
+  // This way, you avoid adding the same layer multiple times
+for (let group in clusterGroups) {
+    map.addLayer(clusterGroups[group]);
+}
 
-csvLayer.addTo(map);
+  // Use the omnivore library to read the CSV file and convert it to GeoJSON
+omnivore.csv("data/csv/adamawa_health_facilities.csv")
+  .on("ready", function() {
+    const layer = this;
+
+    layer.eachLayer(function(markerLayer) {
+        // the properties of the feature(health facility)
+      const props = markerLayer.feature.properties;
+        // "?.trim()" is used to remove any leading or trailing whitespace
+      const category = props.Category?.trim();
+
+        // The keys of categoryIcons are the same as the keys of clusterGroups,
+        // but the values are different (icons for categroyIcons and markerClusterGroup for clusterGroups)
+      const iconToUse = categoryIcons[category] || defaultIcon;
+
+      const marker = L.marker(markerLayer.getLatLng(), { icon: iconToUse });
+
+      let popupContent = "<b>Facility Info</b><br>";
+      for (let key in props) {
+        popupContent += `<b>${key}</b>: ${props[key]}<br>`;
+      }
+      marker.bindPopup(popupContent);
+
+      if (clusterGroups[category]) {
+        clusterGroups[category].addLayer(marker);
+      } else {
+        clusterGroups["Other"].addLayer(marker);
+      }
+    });
+  })
+// csvLayer.addTo(map);
 
