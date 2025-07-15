@@ -21,5 +21,8 @@ This project is an interactive web map for visualizing health facility locations
 <!-- Alternate method -->
 <!-- ![Initial zoom](screenshots/initial_zoom.png) -->
 
+##### Initial zoom
 <img src="screenshots/initial_zoom.png" alt="Web Map Initial Zoom" width="600"/>
+
+##### Zoomed in
 <img src="screenshots/zoomed_in.png" alt="Web Map Initial Zoom" width="600"/>
