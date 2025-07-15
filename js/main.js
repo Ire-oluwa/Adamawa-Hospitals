@@ -67,6 +67,7 @@ const markers = L.markerClusterGroup();
 // add the marker clusters to the map
  map.addLayer(markers);
 
+
 //  _________________________________________________________________________________________
 // icon for each category 
 /*
@@ -84,6 +85,8 @@ const phcIcon = L.icon({
 })
 
 
+
+
 // ____________________________________________________________________________________________
 
 // Use the omnivore library to read the CSV file and convert it to GeoJSON
@@ -99,9 +102,27 @@ var csvLayer = omnivore.csv("data/csv/adamawa_health_facilities.csv", null,
                 if (category === "Primary Health Center") {
                     iconToUse = phcIcon;
                 }
+                else if (){}
+                else if (){}
+                else if (){}
+                else if (){}
+                else if (){}
+                else if (){}
+                else if (){}
+                else if (){}
+                else if (){}
+                else if (){}
+                else if (){}
+                else if (){}
+                else {
+                    iconToUse = dispensaryIcon; // default icon for other categories
+                }
 
-                markers.addLayer(L.circleMarker(latlng))
-                return markers;
+                const marker = L.marker(latlng, { icon: iconToUse });
+                markers.addLayer(marker);
+                return marker;
+                // markers.addLayer(L.marker(latlng, {icon: iconToUse}))
+                
             },
 
             // Popup Content for each marker
