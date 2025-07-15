@@ -67,13 +67,41 @@ const markers = L.markerClusterGroup();
 // add the marker clusters to the map
  map.addLayer(markers);
 
+//  _________________________________________________________________________________________
+// icon for each category 
+/*
+'Dispensary', 'Primary Health Center', 'Specialist Hospital','Maternity Home', 'Medical Center', 'Educational Clinic',
+'Cottage Hospital', 'Private Non Profit', 'Federal Staff Clinic',
+'Comprehensive Health Center', 'Veterinary Clinic',
+'Military and Paramilitary Clinic', 'General Hospital',
+'Federal Medical Center'
+*/
+const dispensaryIcon = L.icon({
+    iconUrl: "data/icons/dispensary.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30]
+})
+const phcIcon = L.icon({
+    iconUrl: "data/icons/primary health centre.svg", iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30]
+})
+
+
+// ____________________________________________________________________________________________
+
 // Use the omnivore library to read the CSV file and convert it to GeoJSON
 var csvLayer = omnivore.csv("data/csv/adamawa_health_facilities.csv", null,
     L.geoJSON(
         null, {
             // convert the markers(points) to layers
             pointToLayer: function(feature, latlng) {
-                return markers.addLayer(L.circleMarker(latlng))
+                // categories of health facilities
+                const category = feature.properties.category;
+
+                let iconToUse;
+                if (category === "Primary Health Center") {
+                    iconToUse = phcIcon;
+                }
+
+                markers.addLayer(L.circleMarker(latlng))
+                return markers;
             },
 
             // Popup Content for each marker
