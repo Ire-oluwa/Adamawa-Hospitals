@@ -18,5 +18,8 @@ This project is an interactive web map for visualizing health facility locations
 - [Leaflet-omnivore](https://github.com/mapbox/leaflet-omnivore)
 - [OpenStreetMap](https://www.openstreetmap.org/)
 
+<!-- Alternate method -->
+<!-- ![Initial zoom](screenshots/initial_zoom.png) -->
 
 <img src="screenshots/initial_zoom.png" alt="Web Map Initial Zoom" width="600"/>
+<img src="screenshots/zoomed_in.png" alt="Web Map Initial Zoom" width="600"/>
